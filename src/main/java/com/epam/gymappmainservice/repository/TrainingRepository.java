@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.sql.Date;
 import java.util.List;
 
-public interface TrainingRepository extends JpaRepository<Training, Integer> {
+public interface  TrainingRepository extends JpaRepository<Training, Integer> {
 
     @Query(value = "SELECT TRAINING_ID FROM TRAININGS t WHERE t.TRAINEE_ID = (SELECT tr.USER_ID FROM TRAINEES tr JOIN" +
             " GYM_USERS u ON tr.USER_ID = u.USER_ID WHERE u.USERNAME = ?1) AND ((?2 IS NULL OR t.TRAINING_DATE >= ?2)" +

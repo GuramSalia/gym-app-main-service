@@ -58,7 +58,7 @@ public class UserManagementController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful login")
     })
-    @GetMapping("public/user/login")
+    @GetMapping("/gym-app/public/user/login")
     public ResponseEntity<AuthenticationResponse> login(
             @Valid @RequestBody UsernamePassword usernamePassword
     ) {
@@ -83,7 +83,7 @@ public class UserManagementController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content")
     })
-    @PutMapping("/user/login")
+    @PutMapping("/gym-app/user/login")
     public ResponseEntity<Void> updatePassword(
             @Valid @RequestBody PasswordUpdateRequest usernamePassword
     ) {
@@ -99,7 +99,7 @@ public class UserManagementController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content")
     })
-    @GetMapping("/user/logout")
+    @GetMapping("/gym-app/user/logout")
     public ResponseEntity<Void> logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String tokenToken = token();

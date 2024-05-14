@@ -43,7 +43,7 @@ public class TraineeController {
         this.endpointSuccessCounter = endpointSuccessCounter;
     }
 
-    @GetMapping("/trainee-get")
+    @GetMapping("/gym-app/trainee-get")
     @Operation(summary = "Get Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee retrieved successfully")
@@ -60,7 +60,7 @@ public class TraineeController {
         return ResponseEntity.ok(traineeDTO);
     }
 
-    @PutMapping("/trainee")
+    @PutMapping("/gym-app/trainee")
     @Operation(summary = "Update Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee updated successfully")
@@ -76,7 +76,7 @@ public class TraineeController {
         return ResponseEntity.ok(traineeDTO);
     }
 
-    @DeleteMapping("/trainee-delete")
+    @DeleteMapping("/gym-app/trainee-delete")
     @Operation(summary = "Delete Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deleted successfully")
@@ -92,7 +92,7 @@ public class TraineeController {
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
-    @PutMapping("/trainee/update-trainers-list")
+    @PutMapping("/gym-app/trainee/update-trainers-list")
     @Operation(summary = "Update Trainee's Trainers List")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainers list updated successfully")
@@ -109,7 +109,7 @@ public class TraineeController {
         return ResponseEntity.ok().body(trainerListDTO);
     }
 
-    @PatchMapping("/trainee/activate")
+    @PatchMapping("/gym-app/trainee/activate")
     @Operation(summary = "Activate Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee activated successfully")
@@ -126,7 +126,7 @@ public class TraineeController {
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
-    @PatchMapping("/trainee/deactivate")
+    @PatchMapping("/gym-app/trainee/deactivate")
     @Operation(summary = "Deactivate Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainee deactivated successfully")
