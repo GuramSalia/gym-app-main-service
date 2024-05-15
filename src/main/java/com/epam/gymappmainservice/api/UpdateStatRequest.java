@@ -16,4 +16,6 @@ public class UpdateStatRequest {
     private Integer duration;
     @NotNull
     private ActionType actionType;
+    @NotNull
+    private String token;
 }

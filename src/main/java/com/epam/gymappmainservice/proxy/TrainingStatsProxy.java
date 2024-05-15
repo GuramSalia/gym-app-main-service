@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-//@FeignClient(name = "training-stats-service", url = "localhost:8000")
 @FeignClient(name = "training-stats-service")
 public interface TrainingStatsProxy {
 

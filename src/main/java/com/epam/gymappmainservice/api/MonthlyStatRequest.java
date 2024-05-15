@@ -11,5 +11,7 @@ public class MonthlyStatRequest {
     private Integer year;
     @NotNull
     private Integer month;
+    @NotNull
+    private String token;
 }
 

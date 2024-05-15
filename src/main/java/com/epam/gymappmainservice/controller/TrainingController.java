@@ -3,11 +3,9 @@ package com.epam.gymappmainservice.controller;
 import com.epam.gymappmainservice.api.*;
 import com.epam.gymappmainservice.aspect.LogRestDetails;
 import com.epam.gymappmainservice.global.EndpointSuccessCounter;
-import com.epam.gymappmainservice.model.Trainee;
-import com.epam.gymappmainservice.model.Trainer;
-import com.epam.gymappmainservice.model.Training;
-import com.epam.gymappmainservice.model.TrainingType;
+import com.epam.gymappmainservice.model.*;
 import com.epam.gymappmainservice.proxy.TrainingStatsProxy;
+import com.epam.gymappmainservice.service.TokenService;
 import com.epam.gymappmainservice.service.TraineeService;
 import com.epam.gymappmainservice.service.TrainerService;
 import com.epam.gymappmainservice.service.TrainingService;
@@ -21,10 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @LogRestDetails
@@ -34,6 +33,7 @@ public class TrainingController {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final EndpointSuccessCounter endpointSuccessCounter;
+    private final TokenService tokenService;
 
     private final TrainingStatsProxy proxy;
 
@@ -48,16 +48,16 @@ public class TrainingController {
             TraineeService traineeService,
             TrainerService trainerService,
             EndpointSuccessCounter endpointSuccessCounter,
-            MeterRegistry meterRegistry,
+            MeterRegistry meterRegistry, TokenService tokenService,
             TrainingStatsProxy proxy
     ) {
         this.trainingService = trainingService;
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.endpointSuccessCounter = endpointSuccessCounter;
+        this.tokenService = tokenService;
         this.proxy = proxy;
     }
-
 
     // modified POST/training
     @PostMapping("/gym-app/training")
@@ -73,12 +73,18 @@ public class TrainingController {
         trainingService.create(training);
         endpointSuccessCounter.incrementCounter("POST/training");
 
-        UpdateStatRequest request = getUpdateStatRequestFromTraining(training);
-        request.setActionType(ActionType.ADD);
+        UpdateStatRequest updateStatRequest = getUpdateStatRequestFromTraining(training);
+        updateStatRequest.setActionType(ActionType.ADD);
+
+        int trainerId = updateStatRequest.getTrainerId();
+        String jwtToken = getTokenByTrainerId(trainerId);
+        updateStatRequest.setToken(jwtToken);
 
         log.info("\n\nTrainingController -> update stat  -> correlationId: {}\n\n", correlationId);
-        ResponseEntity<Map<String, Integer>> updateStats = proxy.updateTrainerStats(request, correlationId);
-        MonthlyStatRequest monthlyStatRequest = getMonthlyStatRequestFromTraining(training);
+        log.info("\n\n - updateStatRequest--\n{}\n\n", updateStatRequest);
+        ResponseEntity<Map<String, Integer>> updateStats = proxy.updateTrainerStats(updateStatRequest, correlationId);
+
+//        MonthlyStatRequest monthlyStatRequest = getMonthlyStatRequestFromTraining(training);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(updateStats.getBody());
     }
@@ -99,24 +105,19 @@ public class TrainingController {
 
         Training training = trainingService.getById(trainingId);
 
-        UpdateStatRequest request = getUpdateStatRequestFromTraining(training);
-        request.setActionType(ActionType.DELETE);
+        UpdateStatRequest updateStatRequest = getUpdateStatRequestFromTraining(training);
+        updateStatRequest.setActionType(ActionType.DELETE);
+
+        String jwtToken = getTokenByTrainingId(trainingId);
+        updateStatRequest.setToken(jwtToken);
 
         log.info("\n\nTrainingController -> delete stat  -> correlationId: {}\n\n", correlationId);
-        ResponseEntity<Map<String, Integer>> response = proxy.updateTrainerStats(request, correlationId);
-        MonthlyStatRequest monthlyStatRequest = getMonthlyStatRequestFromTraining(training);
+        ResponseEntity<Map<String, Integer>> response = proxy.updateTrainerStats(updateStatRequest, correlationId);
+//        MonthlyStatRequest monthlyStatRequest = getMonthlyStatRequestFromTraining(training);
 
         return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
     }
 
-    //    private String getCorrelationIdFromRequest() {
-    //        ServletRequestAttributes requestAttributes =
-    //                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    //        if (requestAttributes != null) {
-    //            return requestAttributes.getRequest().getHeader("Correlation-ID");
-    //        }
-    //        return null;
-    //    }
 
     // new GET/training/monthly-stat
     @GetMapping("/gym-app/trainings/monthly-stat")
@@ -128,6 +129,10 @@ public class TrainingController {
             @Valid @RequestBody MonthlyStatRequest monthlyStatRequest,
             @RequestHeader(name = "gym-app-correlation-id", required = false, defaultValue = "no-correlation-id") String correlationId
     ) {
+        int trainerId = monthlyStatRequest.getTrainerId();
+        String jwtToken = getTokenByTrainerId(trainerId);
+        monthlyStatRequest.setToken(jwtToken);
+
         log.info("\n\nTrainingController -> get monthly stat  -> correlationId: {}\n\n", correlationId);
         ResponseEntity<Map<String, Integer>> response = proxy.getTrainerMonthlyStats(monthlyStatRequest, correlationId);
         return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
@@ -145,10 +150,31 @@ public class TrainingController {
     ) {
         log.info("\n\nTrainingController -> get full stat -> correlationId: {}\n\n", correlationId);
 
+        int trainerId = fullStatRequest.getTrainerId();
+        String jwtToken = getTokenByTrainerId(trainerId);
+        fullStatRequest.setToken(jwtToken);
+
         ResponseEntity<Map<Integer, List<Map<String, Integer>>>> response = proxy.getTrainerFullStats(fullStatRequest
                 , correlationId);
         return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
     }
+
+    private String getTokenByTrainerId(int trainerId) {
+        log.info("\n\n ++++++++++ TrainingController > getTokenByTrainerId ++++++++++++\n\n");
+        User trainer = trainerService.getById(trainerId);
+        log.info("\n\n ++++++++++ ???????????? ++++++++++++\n\n");
+        String validTokenByUsername = tokenService.getValidTokenByUsername(trainer);
+        log.info("\n\n ++++++++++ validTokenByUsername {}  ++++++++++++\n\n", validTokenByUsername);
+        return validTokenByUsername;
+    }
+
+    private String getTokenByTrainingId(int trainingId) {
+        Training training = trainingService.getById(trainingId);
+        int trainerId = training.getTrainer().getUserId();
+        return getTokenByTrainerId(trainerId);
+    }
+
+
 
     private UpdateStatRequest getUpdateStatRequestFromTraining(Training training) {
         Date date = training.getTrainingDate();
