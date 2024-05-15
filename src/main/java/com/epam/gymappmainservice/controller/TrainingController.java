@@ -84,8 +84,6 @@ public class TrainingController {
         log.info("\n\n - updateStatRequest--\n{}\n\n", updateStatRequest);
         ResponseEntity<Map<String, Integer>> updateStats = proxy.updateTrainerStats(updateStatRequest, correlationId);
 
-//        MonthlyStatRequest monthlyStatRequest = getMonthlyStatRequestFromTraining(training);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(updateStats.getBody());
     }
 
@@ -113,7 +111,6 @@ public class TrainingController {
 
         log.info("\n\nTrainingController -> delete stat  -> correlationId: {}\n\n", correlationId);
         ResponseEntity<Map<String, Integer>> response = proxy.updateTrainerStats(updateStatRequest, correlationId);
-//        MonthlyStatRequest monthlyStatRequest = getMonthlyStatRequestFromTraining(training);
 
         return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
     }
@@ -160,11 +157,10 @@ public class TrainingController {
     }
 
     private String getTokenByTrainerId(int trainerId) {
-        log.info("\n\n ++++++++++ TrainingController > getTokenByTrainerId ++++++++++++\n\n");
+        log.info("\n\n TrainingController > getTokenByTrainerId\n\n");
         User trainer = trainerService.getById(trainerId);
-        log.info("\n\n ++++++++++ ???????????? ++++++++++++\n\n");
         String validTokenByUsername = tokenService.getValidTokenByUsername(trainer);
-        log.info("\n\n ++++++++++ validTokenByUsername {}  ++++++++++++\n\n", validTokenByUsername);
+        log.info("\n\n  validTokenByUsername {}  \n\n", validTokenByUsername);
         return validTokenByUsername;
     }
 

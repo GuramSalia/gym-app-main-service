@@ -16,7 +16,6 @@ import java.util.List;
 public class TokenService {
 
     private final TokenRepository tokenRepository;
-//    private final TrainerService trainerService;
 
     @Autowired
     public TokenService(TokenRepository tokenRepository) {
@@ -39,9 +38,6 @@ public class TokenService {
         return tokenRepository.findByUser(user);
     }
 
-//    public List<Token> findByUsername(String username) {
-//        return tokenRepository.findByUsername(username);
-//    }
 
     public String getValidTokenByUsername(User user) {
         log.info("\n\n++++++++++++++++++++ in TokenService getValidTokenByUsername() \n\n ");
@@ -62,11 +58,5 @@ public class TokenService {
                 .map(Token::getToken)
                 .orElseThrow(() -> new RuntimeException("Token not found"));
 
-        //        return tokenRepository.findByUsername(username)
-        //               .stream()
-        //               .filter(token ->!token.isRevoked() &&!token.isExpired())
-        //               .findFirst()
-        //               .map(Token::getToken)
-        //               .orElseThrow(() -> new RuntimeException("Token not found"));
     }
 }
