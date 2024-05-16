@@ -66,7 +66,7 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        log.info("\n\n JwtService >> isTokenValid >> Token: " + token);
+        log.info("\n\n JwtService >> isTokenValid(token, userDetails) >> Token: " + token);
         Token tokenEntity = tokenService.findByToken(token);
         if (tokenEntity == null) {
             log.error("\n\n JwtService >> isTokenValid >> Token not found in the database");
@@ -80,6 +80,16 @@ public class JwtService {
         }
         String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenValid(String token) {
+        if (!isTokenExpired(token)) {
+            log.info("\n\n JwtService >> isTokenValid(token) >> Token: {} >> false", token);
+            return false;
+        }
+
+        Token tokenEntity = tokenService.findByToken(token);
+        return true;
     }
 
     private boolean isTokenExpired(String token) {

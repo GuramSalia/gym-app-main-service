@@ -81,6 +81,19 @@ public class TrainingService {
         return trainingOptional.get();
     }
 
+    public void delete(Integer trainingId) {
+        log.info(">>>> Deleting training with id: " + trainingId);
+
+        Optional<Training> trainingOptional = trainingDAO.getById(trainingId);
+        if (trainingOptional.isEmpty()) {
+            log.error("Cannot delete (because not found) training with id: " + trainingId);
+            throw new TrainingNotFoundException("Cannot delete training with id: " + trainingId);
+        }
+
+        trainingDAO.delete(trainingOptional.get());
+        log.info(">>>> Deleting training with id: " + trainingId);
+    }
+
     public List<Training> getTrainingsByTraineeAndOtherFilters(
             String traineeUsername,
             Date startDate,

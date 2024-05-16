@@ -43,7 +43,7 @@ public class TrainerController {
         this.endpointSuccessCounter = endpointSuccessCounter;
     }
 
-    @GetMapping("/trainer-get")
+    @GetMapping("/gym-app/trainer-get")
     @Operation(summary = "Get Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer")
@@ -59,7 +59,7 @@ public class TrainerController {
         return ResponseEntity.ok().body(trainerDTO);
     }
 
-    @PutMapping("/trainer")
+    @PutMapping("/gym-app/trainer")
     @Operation(summary = "Update Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainer updated successfully")
@@ -75,7 +75,7 @@ public class TrainerController {
         return ResponseEntity.ok().body(trainerDTOupdated);
     }
 
-    @GetMapping("/trainers/get-not-assigned-to-trainee")
+    @GetMapping("/gym-app/trainers/get-not-assigned-to-trainee")
     @Operation(summary = "Get Trainers Not Assigned to Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainers")
@@ -92,7 +92,7 @@ public class TrainerController {
         return ResponseEntity.ok().body(trainerDTOs);
     }
 
-    @PatchMapping("/trainer/activate")
+    @PatchMapping("/gym-app/trainer/activate")
     @Operation(summary = "Activate Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainer activated successfully")
@@ -109,7 +109,7 @@ public class TrainerController {
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
-    @PatchMapping("/trainer/deactivate")
+    @PatchMapping("/gym-app/trainer/deactivate")
     @Operation(summary = "Deactivate Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Trainer deactivated successfully")

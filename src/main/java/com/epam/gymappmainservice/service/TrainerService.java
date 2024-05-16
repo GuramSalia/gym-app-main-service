@@ -61,7 +61,7 @@ public class TrainerService {
         return trainerOptional.get();
     }
 
-    private Trainer getById(int id) {
+    public Trainer getById(int id) {
 
         log.info(">>>> Getting trainer with id: " + id);
         Optional<Trainer> trainerOptional = trainerDAO.getById(id);

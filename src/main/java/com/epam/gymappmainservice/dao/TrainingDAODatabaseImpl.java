@@ -83,4 +83,9 @@ public class TrainingDAODatabaseImpl implements TrainingDAO {
 
         return trainings;
     }
+
+    @Override
+    public void delete(Training training) {
+        trainingRepository.delete(training);
+    }
 }

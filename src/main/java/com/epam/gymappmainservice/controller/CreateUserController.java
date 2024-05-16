@@ -48,7 +48,7 @@ public class CreateUserController {
         this.endpointSuccessCounter = endpointSuccessCounter;
     }
 
-    @PostMapping("public/create/trainee")
+    @PostMapping("/gym-app/public/create/trainee")
     @Operation(summary = "Create Trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Trainee Registered")
@@ -73,7 +73,7 @@ public class CreateUserController {
         return newTrainee;
     }
 
-    @PostMapping("public/create/trainer")
+    @PostMapping("/gym-app/public/create/trainer")
     @Operation(summary = "Create Trainer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Trainee Registered")
@@ -102,8 +102,14 @@ public class CreateUserController {
         return newTrainer;
     }
 
-    @GetMapping("/")
+    @GetMapping("/gym-app/")
     public String index() {
+        return "Hello World!";
+    }
+
+    @GetMapping("/gym-app/home")
+    public String home() {
+        log.info("\n\n ----------- /home called --------\n\n");
         return "Hello World!";
     }
 }

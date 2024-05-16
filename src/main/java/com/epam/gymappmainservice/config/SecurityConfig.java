@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 "h2-console/**",
                                 "actuator",
                                 "actuator/**",
-                                "public/**",
+                                "/gym-app/public/**",
                                 "/swagger-ui/**",
                                 "v3/api-docs/**",
                                 "v3/api-docs/swagger-config",
@@ -88,7 +88,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://example1.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("public/create/trainee/**", configuration);
+        source.registerCorsConfiguration("gym-app/public/create/trainee/**", configuration);
         return source;
     }
 
@@ -98,7 +98,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://example2.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("public/create/trainer/**", configuration);
+        source.registerCorsConfiguration("gym-app/public/create/trainer/**", configuration);
         return source;
     }
 }

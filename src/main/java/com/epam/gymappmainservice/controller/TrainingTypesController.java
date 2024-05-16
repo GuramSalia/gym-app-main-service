@@ -36,7 +36,7 @@ public class TrainingTypesController {
         this.endpointSuccessCounter = endpointSuccessCounter;
     }
 
-    @GetMapping("/training-types")
+    @GetMapping("/gym-app/training-types")
     @Operation(summary = "get training types")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee activated successfully")

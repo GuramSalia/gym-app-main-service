@@ -85,4 +85,9 @@ public class TrainingDAOInMemoryStorageImpl implements TrainingDAO {
                              )
                       .collect(Collectors.toList());
     }
+
+    @Override
+    public void delete(Training training) {
+        log.info("delete training not implemented here");
+    }
 }

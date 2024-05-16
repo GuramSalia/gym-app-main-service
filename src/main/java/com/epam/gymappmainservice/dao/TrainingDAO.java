@@ -25,4 +25,6 @@ public interface TrainingDAO {
             Date startDate,
             Date endDate,
             String trainerUsername);
+
+    public void delete(Training training);
 }
