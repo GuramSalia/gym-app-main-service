@@ -37,11 +37,18 @@ public class TrainingController {
 
     private final TrainingStatsProxy proxy;
 
-    // 1. update training stats: when training created. action type is 'ADD'. endpoint: "/training".
-    // 2. update training stats: when training removed. action type is 'DELETE'. endpoint: new DELETE "/training".
-    // 3. get training stats: full stat.  endpoint: new GET "/training/monthly-stat"
-    // 4. get training stats: monthly stat. endpoint: new GET "/training/full-stat"
+    /*
+         TASK2.1
+         1. update training stats: when training created. action type is 'ADD'. endpoint: "/training".
+         2. update training stats: when training removed. action type is 'DELETE'. endpoint: new DELETE "/training".
+         3. get training stats: full stat.  endpoint: new GET "/training/monthly-stat"
+         4. get training stats: monthly stat. endpoint: new GET "/training/full-stat"
 
+         TASK3.1
+         1. instead of proxy use ActiveMQ
+         2. since communication should be asynchronous, I need to use MessageListener.
+         3. I assume I can use Artemis as ActiveMQ
+    */
     @Autowired
     public TrainingController(
             TrainingService trainingService,
@@ -115,7 +122,6 @@ public class TrainingController {
         return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
     }
 
-
     // new GET/training/monthly-stat
     @GetMapping("/gym-app/trainings/monthly-stat")
     @Operation(summary = "Get monthly stat about total training minutes of a given trainer in a particular month")
@@ -169,8 +175,6 @@ public class TrainingController {
         int trainerId = training.getTrainer().getUserId();
         return getTokenByTrainerId(trainerId);
     }
-
-
 
     private UpdateStatRequest getUpdateStatRequestFromTraining(Training training) {
         Date date = training.getTrainingDate();
